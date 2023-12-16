@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load thumbnail %}
+
+{% block title %} 
+  {% if lets_following %}
+    Давайте начнём!
+  {% else %}
+    Посты избранных авторов
+  {% endif %} 
+{% endblock %}
+
+{% block content %}
+  {% if lets_following %}
+    <div class="container py-5"> 
+      <div class="row justify-content-center">
+        <div class="col-md-8 p-5">
+          <div class="card">
+            <div class="card-header">
+              Вы ещё не подписались ни на одного автора!
+            </div>
+            <div class="card-body">
+              <p>Давайте это исправим!</p>
+              <a class="btn btn-primary" href="{% url 'posts:index' %}">
+                Посмотреть последние обновления на сайте
+              </a>
+            </div> 
+          </div> 
+        </div>
+      </div> 
+    </div>
+  {% else %}
+    {% include 'posts/includes/switcher.html' %}
+      <div class="container py-5">     
+        <h1>Последние обновления избранных авторов</h1>
+        {% load cache %}
+        {% cache 20 follow_page %}
+          {% for post in page_obj %}
+            {% include 'posts/includes/post_list.html' %} 
+              {% if post.category %}   
+                <a href="{% url 'posts:category_list' post.category.slug %}">все записи группы</a>
+              {% endif %} 
+            {% if not forloop.last %}<hr>{% endif %}
+          {% endfor %} 
+        {% endcache %}
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-4 p-4">
+          {% include 'posts/includes/paginator.html' %}
+        </div> 
+      </div> 
+  {% endif %}
+{% endblock %}
+
