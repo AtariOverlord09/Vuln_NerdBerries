@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db import connection
+from django.http import QueryDict
 
 from core.paginator import paginator
-from posts.forms import CommentForm, PostForm
+from posts.forms import CommentForm, PostForm, SearchForm
 from posts.models import Category, Post, Comment, Follow
 
 
@@ -11,12 +13,38 @@ User = get_user_model()
 
 
 def index(request):
-    template = 'posts/index.html'
+    form = SearchForm(request.GET)
     posts = Post.objects.all()
+    template = 'posts/index.html'
+    context = {}
+
+    if form.is_valid():
+        query = form.cleaned_data.get('query')
+        if query:
+            # Уязвимый код (используйте его только для образовательных целей)
+            sql_query = f"SELECT * FROM posts_post WHERE title LIKE '%{query}%' OR text LIKE '%{query}%'"
+            with connection.cursor() as cursor:
+                cursor.execute(sql_query)
+                columns = [col[0] for col in cursor.description]
+                print(columns)
+                posts = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+            context.update({'query': query, 'posts': posts})
+
     page_number = request.GET.get('page')
-    context = {
-        'page_obj': paginator(posts, page_number),
-    }
+    page_obj = paginator(posts, page_number, 10)
+
+    # Сохраняем параметры запроса для пагинации
+    query_dict = QueryDict(mutable=True)
+    query_dict.update(request.GET)
+    query_dict.pop('page', None)
+
+    context.update({
+        'page_obj': page_obj,
+        'form': form, 
+        'pagination_query_params': query_dict.urlencode(),
+    })
+
     return render(request, template, context)
 
 

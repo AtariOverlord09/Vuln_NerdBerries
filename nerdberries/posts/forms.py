@@ -26,6 +26,14 @@ class PostForm(forms.ModelForm):
         if not data:
             raise ValidationError('Заполните пожалуйста это поле')
         return data
+    
+
+class SearchForm(forms.Form):
+    query = forms.CharField(
+        label='Поиск', 
+        max_length=200,
+        required=False,
+    )
 
 
 class CommentForm(forms.ModelForm):

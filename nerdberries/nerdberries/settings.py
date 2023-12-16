@@ -14,7 +14,7 @@ ALLOWED_HOSTS = [
     '[::1]',
     'testserver',
     '0.0.0.0',
-    '452a-5-228-80-254.ngrok-free.app',
+    '9bb2-5-228-80-254.ngrok-free.app',
 ]
 CACHES = {
     'default': {

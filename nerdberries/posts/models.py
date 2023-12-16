@@ -1,3 +1,4 @@
+from enum import unique
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -17,6 +18,12 @@ class Category(models.Model):
 
 
 class Post(CreatedModel):
+    title = models.CharField(
+        'Название',
+        help_text='Введите название скрипта',
+        max_length=200,
+        unique=True,
+    )
     text = models.TextField(
         'Описание скрипта',
         help_text='Введите описание скрипта'

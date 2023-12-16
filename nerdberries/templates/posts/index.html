@@ -1,3 +1,4 @@
+<!-- ваш_проект/posts/templates/posts/index.html -->
 {% extends 'base.html' %}
 {% load static %}
 {% block title %} 
@@ -6,22 +7,75 @@
 {% load thumbnail %}
 {% block content %}
   {% include 'posts/includes/switcher.html' %}
-  <div class="container py-5">     
+  <div class="container py-5">
     <h1>Последние обновления на сайте</h1>
-    {% load cache %}
-    {% cache 20 index_page %}
-      {% for post in page_obj %}
-        {% include 'posts/includes/post_list.html' %} 
-          {% if post.category %}   
-            <a href="{% url 'posts:category_list' post.category.slug %}">все записи группы</a>
-          {% endif %} 
-        {% if not forloop.last %}<hr>{% endif %}
-      {% endfor %} 
-    {% endcache %}
+    <form method="get" action="{% url 'posts:index' %}">
+      {{ form.as_p }}
+      <button type="submit">Искать</button>
+    </form>
+
+    {% if query %}
+      {% if page_obj %}
+        <p>Результаты поиска для: {{ query }}</p>
+        {% load cache %}
+        {% cache 20 index_page %}
+          {% for post in page_obj %}
+            {% include 'posts/includes/post_list.html' %} 
+              {# 
+                На самом деле это слепая SQL-инъекция, 
+                но для демонстрации мы будем выводить данные posts напрямую
+              #}
+              {{ post }}  
+              {% if post.category %}   
+                <a href="{% url 'posts:category_list' post.category.slug %}">все записи группы</a>
+              {% endif %} 
+            {% if not forloop.last %}<hr>{% endif %}
+          {% endfor %} 
+        {% endcache %}
+      {% else %}
+        <p>По вашему запросу "{{ query }}" ничего не найдено.</p>
+      {% endif %}
+    {% else %}
+      {# Выводим все посты, если запроса нет #}
+      {% load cache %}
+      {% cache 20 index_page %}
+        {% for post in page_obj %}
+          {% include 'posts/includes/post_list.html' %} 
+            {% if post.category %}   
+              <a href="{% url 'posts:category_list' post.category.slug %}">все записи группы</a>
+            {% endif %} 
+          {% if not forloop.last %}<hr>{% endif %}
+        {% endfor %} 
+      {% endcache %}
+    {% endif %}
   </div>
   <div class="row justify-content-center">
     <div class="col-md-4 p-4">
-      {% include 'posts/includes/paginator.html' %}
+      {% if page_obj %}
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1&{{ pagination_query_params }}">first</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ pagination_query_params }}">previous</a>
+              </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ pagination_query_params }}">next</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ pagination_query_params }}">last</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
     </div> 
   </div> 
 {% endblock %}
