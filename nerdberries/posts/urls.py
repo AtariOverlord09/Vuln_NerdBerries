@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -11,6 +11,7 @@ urlpatterns = [
     path('posts/<int:post_id>/', views.post_detail, name='post_detail'),
     path('group/<slug:slug>/', views.category_posts, name='category_list'),
     path('profile/<str:username>/', views.profile, name='profile'),
+    re_path(r'^get_image/(?P<filename>.+)/$', views.get_image, name='get_image'),
     path('create/', views.post_create, name='post_create'),
     path(
         'posts/<int:post_id>/comment/',

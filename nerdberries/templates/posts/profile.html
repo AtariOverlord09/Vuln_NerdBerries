@@ -4,7 +4,8 @@
 {% block title %} Профайл пользователя {{ author.username }} {% endblock %}
 {% block content %}
 <div class="mb-5">
-  <div class="container py-5">        
+  <div class="container py-5">
+    <img src="{% url 'posts:get_image' filename='user_12.jpg' %}" alt="User Image">
     <h1>Все посты пользователя {{ author.username }} </h1>
     <h3>Всего постов: {{ page_obj.paginator.count }} </h3>
     {% if request.user != author %}

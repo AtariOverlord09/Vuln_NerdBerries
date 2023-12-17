@@ -1,13 +1,13 @@
-import re
+import os
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import connection
-from django.http import QueryDict
-from py import log
+from django.http import QueryDict, HttpResponse
+from django.conf import settings
 
 from core.paginator import paginator
-from core.purchase_redirect import set_status_and_redirect
 from posts.forms import CommentForm, PostForm, SearchForm
 from posts.models import Category, Post, Comment, Follow, Purchase
 
@@ -70,12 +70,23 @@ def profile(request, username):
         if Follow.objects.filter(author=user, user=request.user).exists():
             following = True
 
+
     context = {
         'following': following,
         'author': user,
         'page_obj': paginator(posts, page_number),
     }
     return render(request, template, context)
+
+def get_image(request, filename):
+    image_path = os.path.join(settings.MEDIA_ROOT, filename)
+    print(image_path)
+    try:
+        with open(image_path, 'rb') as image_file:
+            image_data = image_file.read()
+            return HttpResponse(image_data, content_type='image/jpeg')  # Adjust content type based on your image format
+    except FileNotFoundError:
+        return HttpResponse(status=404)
 
 
 def post_detail(request, post_id):
