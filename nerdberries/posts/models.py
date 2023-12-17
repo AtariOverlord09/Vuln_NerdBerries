@@ -63,6 +63,34 @@ class Post(CreatedModel):
 
     def __str__(self):
         return self.text[:15]
+    
+class Purchase(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='purchases',
+        verbose_name='Покупатель'
+    )
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='purchases',
+        verbose_name='Пост'
+    )
+    price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        verbose_name='Цена',
+        help_text='Введите цену'
+    )
+    date = models.DateTimeField(
+        'Дата покупки',
+        auto_now_add=True
+    )
+    class Meta:
+        verbose_name = 'Покупка'
+        verbose_name_plural = 'Покупки'
+        ordering = ['-date']
 
 
 class Comment(CreatedModel):

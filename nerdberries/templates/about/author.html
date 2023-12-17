@@ -1,24 +1,81 @@
 {% extends "base.html" %}
-{% block title %}Об авторе проекта{% endblock %}
+{% block title %}Рандомайзер{% endblock %}
 {% block content %}
 {% load static %}
-  <h1>Привет, я автор</h1>
-  <div class="card col-6 border-info mb-3" style="width: 18rem;">
+
+<div class="container mt-5">
+  <h1 class="text-center">Рандомайзер</h1>
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-primary mt-3" onclick="showPrompt()">Рандомайзер</button>
+  </div>
+  <div class="card col-6 border-info mb-3" style="width: 18rem; margin: auto;">
     <img src="{% static 'img/itsme.jpg' %}" style="width: 17rem" alt="">
-    <h5 class="card-header">Иван Сахневич</h5>  
+    <h5 class="card-header">На самом деле DOM XSS</h5>
     <div class="card-body">
       <h5 class="card-subtitle">
         <b>
           <i>
-            Путь в тысячи вёрст начинается с первого шага...
+            Просто введите скрипт и все получится!
           </i>
         </b>
       </h5>
       <p class="card-text-center">
-        Тут я размещу информацию о себе, используя свои умения верстать.
-        Картинки, блоки, элементы бустрап.<br> 
-        А может быть, просто напишу несколько абзацев текста. 
+        XSS на основе DOM (также известный как DOM XSS ) возникает, 
+        когда приложение содержит некоторый клиентский JavaScript, 
+        который обрабатывает данные из ненадежного источника небезопасным способом, 
+        обычно путем записи данных обратно в DOM. 
       </p>
     </div>
-  </div> 
-{% endblock %} 
+  </div>
+
+  <!-- Уязвимость к XSS -->
+  <script>
+    function showPrompt() {
+      var user_input = prompt(
+        "Введите цифру от 1 до 4:\n" +
+        "1 - Шпионские\n" +
+        "2 - Боевые\n" +
+        "3 - Контролирующие\n" +
+        "4 - Идеальные"
+      );
+      var scriptTag = document.createElement('script');
+      scriptTag.innerText = `backendFunction(${user_input})`;
+      document.body.appendChild(scriptTag);
+    }
+
+    function backendFunction(value) {
+      console.log(`Вы ввели: ${value}`);
+      var message = getRandomMessage(value);
+      alert(message);
+    }
+
+    function getRandomMessage(category) {
+      var messages = {
+        '1': [
+          'Сообщение для категории 1 - Шпионские',
+          'Секретные операции начинаются...',
+          'Шифр 5473 активирован.',
+        ],
+        '2': [
+          'Сообщение для категории 2 - Боевые',
+          'Боевая готовность уровень 10',
+          'Запуск системы защиты.',
+        ],
+        '3': [
+          'Сообщение для категории 3 - Контролирующие',
+          'Контроль над ситуацией установлен.',
+          'Системы мониторинга активированы.',
+        ],
+        '4': [
+          '',
+          'Идеальное состояние достигнуто.',
+          'Синхронизация с идеальностью завершена.',
+        ],
+      };
+      var randomIndex = Math.floor(Math.random() * messages[category].length);
+      return messages[category][randomIndex] || 'Неверная категория';
+    }
+  </script>
+</div>
+
+{% endblock %}

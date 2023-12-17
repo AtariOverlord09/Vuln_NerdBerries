@@ -2,6 +2,7 @@
 <article>
   <ul>
     <li>
+      <p>Название: {{ post.title }}</p>
       Автор: {{ post.author.get_full_name|default:"unknown" }}
       {% if post.author %}
         <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a>
@@ -9,11 +10,11 @@
     </li>
     <li>
       Дата публикации: {{ post.created|date:"d E Y" }}
+      <a href="{% url 'posts:post_detail' post.id %}">подробная информация</a> 
     </li>
   </ul>
   {% thumbnail post.image "200x200" crop="center" upscale=True as im %}
     <img class="card-img my-2" src="{{ im.url }}">
   {% endthumbnail %}
-  <p>Название: {{ post.title }}</p>
-  <p>{{ post.text }}</p>
+  <p>{{ post.text|safe }}</p>
 </article>

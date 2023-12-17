@@ -40,6 +40,21 @@
       <p>
         Цена: {{ post.price }}
       </p>
+      {% if product_purchased %}
+        <a
+          class="btn btn-lg btn-light"
+          href="{% url 'posts:return_purchase' post.id %}" role="button"
+        >
+          Товар уже куплен
+        </a>
+      {% else %}
+        <a
+          class="btn btn-lg btn-primary"
+          href="{% url 'posts:make_purchase' post.id %}" role="button"
+        >
+          Купить товар
+        </a>
+  {% endif %}
       {% if request.user == post.author %}
         <li class="list-category-item">
           <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">

@@ -28,4 +28,19 @@ urlpatterns = [
         views.profile_unfollow,
         name='profile_unfollow'
     ),
+    path(
+        'posts/<int:post_id>/make_purchase/',
+        views.make_purchase, 
+        name='make_purchase',
+    ),
+    path(
+        'posts/<int:post_id>/return_purchase/',
+        views.return_purchase, 
+        name='return_purchase',
+    ),
+    path(
+        'purchases/',
+        views.purchases,
+        name='purchases',
+    ),
 ]

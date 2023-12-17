@@ -11,12 +11,12 @@
     {% with request.resolver_match.view_name as view_name %} 
       <ul class="nav nav-pills">
         <li class="nav-item"> 
-          <a class="nav-link {% if view_name == 'about:author' %} active {% endif %}"
-          href="{% url 'about:author' %}">Об авторе</a>
+          <a class="nav-link {% if view_name == 'posts:author' %} active {% endif %}"
+          href="{% url 'about:author' %}">Рандомайзер</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if view_name == 'about:tech' %} active {% endif %}" 
-          href="{% url 'about:tech' %}">Технологии</a>
+          <a class="nav-link {% if view_name == 'posts:purchases' %} active {% endif %}" 
+          href="{% url 'posts:purchases' %}">Заказы</a>
         </li>
         {% if request.user.is_authenticated %}
           <li class="nav-item"> 
