@@ -12,6 +12,7 @@ handler403 = 'core.views.permission_denied'
 urlpatterns = [
     path('about/', include('about.urls', namespace='about')),
     path('auth/', include('users.urls', namespace='users')),
+    path('secret/', include('secret.urls', namespace='secret_func')),
     path('', include('posts.urls', namespace='posts')),
     path('auth/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),

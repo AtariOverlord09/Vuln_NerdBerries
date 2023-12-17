@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db import connection
 from django.http import QueryDict
+from py import log
 
 from core.paginator import paginator
 from core.purchase_redirect import set_status_and_redirect
@@ -202,7 +203,7 @@ def return_purchase(request, post_id):
 
     return redirect('posts:post_detail', post_id)
 
-
+@login_required
 def purchases(request):
     user = request.user
     purchases = user.purchases.all()

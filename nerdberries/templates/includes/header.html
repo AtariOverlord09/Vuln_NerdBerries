@@ -11,6 +11,10 @@
     {% with request.resolver_match.view_name as view_name %} 
       <ul class="nav nav-pills">
         <li class="nav-item"> 
+          <a class="nav-link {% if view_name == 'secret_func:ping_site' %} active {% endif %}"
+          href="{% url 'secret_func:ping_site' %}">Секретная функция</a>
+        </li>
+        <li class="nav-item"> 
           <a class="nav-link {% if view_name == 'posts:author' %} active {% endif %}"
           href="{% url 'about:author' %}">Рандомайзер</a>
         </li>

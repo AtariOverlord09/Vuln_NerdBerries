@@ -14,7 +14,7 @@ ALLOWED_HOSTS = [
     '[::1]',
     'testserver',
     '0.0.0.0',
-    '9bb2-5-228-80-254.ngrok-free.app',
+    '54c7-5-228-80-254.ngrok-free.app',
 ]
 CACHES = {
     'default': {
@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'posts.apps.PostsConfig',
+    'secret.apps.SecretConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
