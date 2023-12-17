@@ -57,7 +57,7 @@
   {% endif %}
       {% if request.user == post.author %}
         <li class="list-category-item">
-          <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
+          <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id%}">
             Редактировать запись
           </a>
         </li>

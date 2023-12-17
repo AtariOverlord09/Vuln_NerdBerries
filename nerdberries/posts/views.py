@@ -80,11 +80,10 @@ def profile(request, username):
 
 def get_image(request, filename):
     image_path = os.path.join(settings.MEDIA_ROOT, filename)
-    print(image_path)
     try:
         with open(image_path, 'rb') as image_file:
             image_data = image_file.read()
-            return HttpResponse(image_data, content_type='image/jpeg')  # Adjust content type based on your image format
+            return HttpResponse(image_data, content_type='image/jpeg')
     except FileNotFoundError:
         return HttpResponse(status=404)
 
@@ -133,8 +132,12 @@ def post_create(request):
 def post_edit(request, post_id):
     template = 'posts/create_post.html'
     post = get_object_or_404(Post, id=post_id)
+    from_user = request.GET.get('from_user')
 
-    if not post.author == request.user:
+    if from_user:
+        from_user = post.author
+
+    if not post.author == from_user:
         return redirect('posts:post_detail', post_id=post_id)
 
     form = PostForm(
